@@ -2,7 +2,8 @@
 const props = defineProps({
     error: Object,
 })
-const handleError = () => clearError({ redirect: '/krasnoyarks' })
+const appConfig = useAppConfig();
+const handleError = () => clearError({ redirect: '/' + appConfig.url.baseCity })
 </script>
 <template>
     <div>

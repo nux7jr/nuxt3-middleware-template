@@ -1,17 +1,17 @@
 export default defineNuxtRouteMiddleware(async (to, from) => {
+    const appConfig = useAppConfig();
+    const cityStore = useCityStore();
     if (!to.params.city) {
-        return navigateTo('/krasnoyarks', { redirectCode: 301 }) // mb 200 OK
+        return navigateTo('/' + appConfig.url.baseCity, { redirectCode: 301 }) // mb 200 OK
     }
     else {
-        const data = await $fetch('http://localhost:3000/api/city.json', {
-            method: 'GET',
-        })
-        if (!data.subfoulders.includes(to.params.city)) {
-            throw createError({ statusCode: 404, statusMessage: 'Page Not Found' })
+        let apiUrl = appConfig.url.baseApiUri + '/' + to.params.city
+        if (to.params.partner) {
+            apiUrl += '/' + to.params.partner
         }
-    }
-    if (to.params.partner) {
-        // дописать логику
-    }
+        const cities = await $fetch(apiUrl);
 
+        console.log(cities)
+        cityStore.setUpCity(cities);
+    }
 })
